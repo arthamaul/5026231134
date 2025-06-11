@@ -5,6 +5,7 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Link;
 use App\Http\Controllers\Pegawai2Controller;
+use App\Http\Controllers\BisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,9 @@ use App\Http\Controllers\Pegawai2Controller;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// import java.io :
+// System.out.println() :
 
 
 Route::get('/', function () {
@@ -65,11 +69,12 @@ Route::get('/dosen', [Link::class,'index']);
 Route::get('/formulir', [PegawaiController::class, 'formulir']);
 Route::post('/formulir/proses', [PegawaiController::class, 'proses']);
 
-
+// route blog
 Route::get('/blog', [BlogController::class, 'home']);
 Route::get('/blog/tentang', [BlogController::class, 'tentang']);
 Route::get('/blog/kontak', [BlogController::class,'kontak']);
 
+// crud pegawai
 Route::get('/pegawai', [PegawaiController::class, 'index']);
 Route::get('/pegawai/tambah', [PegawaiController::class,'tambah'] );
 Route::post('/pegawai/store', [PegawaiController::class,'store'] );
@@ -77,3 +82,12 @@ Route::get('/pegawai/edit/{id}', [PegawaiController::class,'edit'] );
 Route::post('/pegawai/update', [PegawaiController::class,'update'] );
 Route::get('/pegawai/hapus/{id}', [PegawaiController::class,'hapus'] );
 Route::get('/pegawai/cari', [PegawaiController::class, 'cari']);
+
+// route bis
+Route::get('/bis', [BisController::class, 'index']);            // Menampilkan daftar BIS
+Route::get('/bis/tambah', [BisController::class, 'tambah']);    // Menampilkan form tambah
+Route::post('/bis/store', [BisController::class, 'store']);    // Menyimpan data baru
+Route::get('/bis/edit/{id}', [BisController::class, 'edit']);  // Menampilkan form edit
+Route::post('/bis/update', [BisController::class, 'update']);  // Memperbarui data
+Route::get('/bis/hapus/{id}', [BisController::class, 'hapus']); // Menghapus data
+Route::get('/bis/cari', [BisController::class, 'cari']);       // Mencari data BIS
