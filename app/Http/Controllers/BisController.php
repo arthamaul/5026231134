@@ -3,59 +3,62 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Pastikan ini ada
-// use App\Models\BIS; // Ini tidak diperlukan jika semua pakai DB::table()
+use Illuminate\Support\Facades\DB; // Pastikan ini di-import karena kita akan pakai Query Builder
 
 class BisController extends Controller
 {
     public function index()
     {
-        // mengambil data dari table BIS dengan pagination
-        $bis = DB::table('bis')->paginate(5); // 5 data per halaman
+        // Mengambil data dari tabel 'bis' dengan pagination
+        $bis = DB::table('bis')->paginate(5); // Menampilkan 5 data per halaman
 
-        // mengirim data BIS ke view index2bis
+        // Mengirim data BIS ke view index2vga
         return view('index2bis', ['bis' => $bis]);
     }
 
-    // method untuk menampilkan view form tambah BIS
+    // Method untuk menampilkan view form tambah BIS
     public function tambah()
     {
-        // memanggil view vga_tambah
+        // Memanggil view tambahbis
         return view('tambahbis');
     }
 
-    // method untuk insert data ke table BIS
+    // Method untuk insert data ke table BIS
     public function store(Request $request)
     {
-        // Validasi input (penting walaupun pakai DB::table)
+        // Validasi input (sangat disarankan tetap ada)
         $request->validate([
             'merkBIS' => 'required|string|max:25',
             'hargaBIS' => 'required|integer|min:0',
-            'tersedia' => 'required|boolean', // Pastikan input ini mengirim 0 atau 1
+            'tersedia' => 'required|boolean',
             'berat' => 'required|numeric|min:0',
         ]);
 
-        // insert data ke table BIS
+        // Insert data ke tabel 'bis' menggunakan Query Builder
         DB::table('bis')->insert([
             'merkBIS' => $request->merkBIS,
             'hargaBIS' => $request->hargaBIS,
-            'tersedia' => $request->tersedia,
+            'tersedia' => $request->tersedia, // Laravel akan mengonversi boolean ke 0/1 untuk DB
             'berat' => $request->berat
         ]);
-        // alihkan halaman ke halaman BIS
+
+        // Alihkan halaman ke halaman BIS dengan pesan sukses
         return redirect('/bis')->with('success', 'Data BIS berhasil ditambahkan!');
     }
 
-    // method untuk edit data BIS
+    // Method untuk edit data BIS
     public function edit($id)
     {
-        // mengambil data BIS berdasarkan id yang dipilih
-        $vga = DB::table('bis')->where('ID', $id)->get(); // Kolom ID bukan id
-        // passing data BIS yang didapat ke view bis_edit.blade.php
-        return view('editbis', ['bis' => $bis]); // Ambil elemen pertama dari koleksi karena get() mengembalikan koleksi
+        // Mengambil data BIS berdasarkan ID yang dipilih menggunakan Query Builder
+        $bis = DB::table('bis')->where('ID', $id)->get(); // 'ID' adalah primary key tabel VGA
+
+        // Passing data BIS yang didapat ke view editvga.blade.php
+        // Karena get() mengembalikan koleksi, kita ambil elemen pertamanya ([0])
+        // agar di view bisa langsung `$bis->properti` tanpa foreach
+        return view('editbis', ['vga' => $bis[0]]);
     }
 
-    // update data BIS
+    // Update data BIS
     public function update(Request $request)
     {
         // Validasi input
@@ -66,39 +69,41 @@ class BisController extends Controller
             'berat' => 'required|numeric|min:0',
         ]);
 
-        // update data BIS
-        DB::table('bis')->where('ID', $request->ID)->update([ // Kolom ID bukan id
+        // Update data BIS menggunakan Query Builder
+        DB::table('bis')->where('ID', $request->ID)->update([ // 'ID' adalah primary key dari form hidden
             'merkBIS' => $request->merkBIS,
             'hargaBIS' => $request->hargaBIS,
             'tersedia' => $request->tersedia,
             'berat' => $request->berat
         ]);
-        // alihkan halaman ke halaman BIS
+
+        // Alihkan halaman ke halaman BIS dengan pesan sukses
         return redirect('/bis')->with('success', 'Data BIS berhasil diperbarui!');
     }
 
-    // method untuk hapus data BIS
+    // Method untuk hapus data BIS
     public function hapus($id)
     {
-        // menghapus data BIS berdasarkan id yang dipilih
-        DB::table('bis')->where('ID', $id)->delete(); // Kolom ID bukan id
+        // Menghapus data BIS berdasarkan ID yang dipilih menggunakan Query Builder
+        DB::table('BIS')->where('ID', $id)->delete(); // 'ID' adalah primary key tabel BIS
 
-        // alihkan halaman ke halaman BIS
+        // Alihkan halaman ke halaman BIS dengan pesan sukses
         return redirect('/bis')->with('success', 'Data BIS berhasil dihapus!');
     }
 
+    // Mencari data BIS
     public function cari(Request $request)
     {
-        // menangkap data pencarian
+        // Menangkap data pencarian
         $cari = $request->cari;
 
-        // mengambil data dari table BIS sesuai pencarian data
-        $vga = DB::table('bis')
+        // Mengambil data dari tabel 'bis' sesuai pencarian data menggunakan Query Builder
+        $bis = DB::table('bis')
             ->where('merkBIS', 'like', "%" . $cari . "%")
             ->orWhere('ID', 'like', "%" . $cari . "%") // Tambahkan pencarian berdasarkan ID juga
             ->paginate(5); // Pagination untuk hasil pencarian
 
-        // mengirim data BIS ke view index2vga
+        // Mengirim data BIS ke view index2bis
         return view('index2bis', ['bis' => $bis, 'cari' => $cari]);
     }
 }
