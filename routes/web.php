@@ -6,6 +6,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Link;
 use App\Http\Controllers\Pegawai2Controller;
 use App\Http\Controllers\BisController;
+use App\Http\Controllers\KaryawanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,3 +92,9 @@ Route::get('/bis/edit/{id}', [BisController::class, 'edit']);  // Menampilkan fo
 Route::post('/bis/update', [BisController::class, 'update']);  // Memperbarui data
 Route::get('/bis/hapus/{id}', [BisController::class, 'hapus']); // Menghapus data
 Route::get('/bis/cari', [BisController::class, 'cari']);       // Mencari data BIS
+
+//crud karyawan
+Route::get('/karyawan', [KaryawanController::class, 'index']);
+Route::get('/karyawan/tambah', [KaryawanController::class, 'tambah']);
+Route::post('/karyawan/store', [KaryawanController::class, 'store']);
+Route::get('/karyawan/hapus/{kodepegawai}', [KaryawanController::class, 'hapus']); // Parameter harus 'kodepegawai'
