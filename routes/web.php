@@ -8,6 +8,7 @@ use App\Http\Controllers\Pegawai2Controller;
 use App\Http\Controllers\BisController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KeranjangBelanjaController;
+use App\Http\Controllers\NewKaryawanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,3 +106,9 @@ Route::get('/keranjangbelanja', [KeranjangBelanjaController::class, 'index']);
 Route::get('/keranjangbelanja/tambah', [KeranjangBelanjaController::class, 'tambah']);
 Route::post('/keranjangbelanja/store', [KeranjangBelanjaController::class, 'store']);
 Route::get('/keranjangbelanja/hapus/{id}', [KeranjangBelanjaController::class, 'hapus']);
+
+//crud NewKaryawanController
+Route::get('/eas', [NewKaryawanController::class, 'index']);
+Route::get('/eas/tambah', [NewKaryawanController::class, 'tambah']);
+Route::post('/eas/store', [NewKaryawanController::class, 'store']);
+Route::get('/eas/hapus/{NIP}', [NewKaryawanController::class, 'hapus']);
